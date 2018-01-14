@@ -56,7 +56,7 @@ public class GeneticAlgorithm<T> {
     Population<T> population = new Population<>(populationSize, chromosomeLength, fitnessFunction, geneGenerator);
 
     int generation = 1;
-    while (generation >= maxGenerationsCount || !terminatePredicate.test(population)) {
+    while (generation < maxGenerationsCount && !terminatePredicate.test(population)) {
       System.out.println("Best solution: " + population.getFittest(0));
 
       population = crossoverPopulation(population);
