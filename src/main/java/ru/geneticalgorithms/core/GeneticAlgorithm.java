@@ -3,7 +3,7 @@ package ru.geneticalgorithms.core;
 import ru.geneticalgorithms.core.function.crossover.CrossoverFunction;
 import ru.geneticalgorithms.core.function.FitnessFunction;
 import ru.geneticalgorithms.core.function.GeneGenerator;
-import ru.geneticalgorithms.core.function.MutationFunction;
+import ru.geneticalgorithms.core.function.mutation.MutationFunction;
 import ru.geneticalgorithms.core.function.parentselect.ParentSelectFunction;
 import ru.geneticalgorithms.core.model.Gene;
 import ru.geneticalgorithms.core.model.Individual;

@@ -3,8 +3,8 @@ package ru.geneticalgorithms.diophantine;
 import ru.geneticalgorithms.core.GeneticAlgorithm;
 import ru.geneticalgorithms.core.function.FitnessFunction;
 import ru.geneticalgorithms.core.function.GeneGenerator;
-import ru.geneticalgorithms.core.function.MutationFunction;
 import ru.geneticalgorithms.core.function.crossover.RandomCrossoverFunction;
+import ru.geneticalgorithms.core.function.mutation.RandomMutationFunction;
 import ru.geneticalgorithms.core.function.parentselect.RouletteWheelParentSelectFunction;
 import ru.geneticalgorithms.core.model.Gene;
 import ru.geneticalgorithms.core.model.Individual;
@@ -37,7 +37,7 @@ public class DiophantineEquationSolver {
         .setTerminatePredicate(terminatePredicate)
         .setParentSelectFunction(new RouletteWheelParentSelectFunction<>())
         .setCrossoverFunction(new RandomCrossoverFunction<>(fitnessFunction))
-        .setMutationFunction(mutationFunction)
+        .setMutationFunction(new RandomMutationFunction<>(geneGenerator))
         .build();
   }
 
@@ -59,13 +59,4 @@ public class DiophantineEquationSolver {
 
   private Predicate<Population<Integer>> terminatePredicate = population -> population.getIndividuals().stream()
       .anyMatch(individual -> individual.getFitness() == 1.0);
-
-  private MutationFunction<Integer> mutationFunction = gene -> {
-    Gene<Integer> newGene = geneGenerator.generateGene();
-    while (newGene.getValue().equals(gene.getValue())) {
-      newGene = geneGenerator.generateGene();
-    }
-
-    return newGene;
-  };
 }

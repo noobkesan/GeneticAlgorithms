@@ -1,4 +1,4 @@
-package ru.geneticalgorithms.core.function;
+package ru.geneticalgorithms.core.function.mutation;
 
 import ru.geneticalgorithms.core.model.Gene;
 
