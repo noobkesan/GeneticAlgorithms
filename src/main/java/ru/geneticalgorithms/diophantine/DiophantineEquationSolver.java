@@ -6,12 +6,11 @@ import ru.geneticalgorithms.core.function.GeneGenerator;
 import ru.geneticalgorithms.core.function.crossover.RandomCrossoverFunction;
 import ru.geneticalgorithms.core.function.mutation.RandomMutationFunction;
 import ru.geneticalgorithms.core.function.parentselect.RouletteWheelParentSelectFunction;
+import ru.geneticalgorithms.core.function.terminatecondition.DefaultTerminateCondition;
 import ru.geneticalgorithms.core.model.Gene;
 import ru.geneticalgorithms.core.model.Individual;
-import ru.geneticalgorithms.core.model.Population;
 
 import java.util.Random;
-import java.util.function.Predicate;
 
 /**
  * @author avnik
@@ -34,7 +33,7 @@ public class DiophantineEquationSolver {
         .setMaxGenerationsCount(100)
         .setFitnessFunction(fitnessFunction)
         .setGeneGenerator(geneGenerator)
-        .setTerminatePredicate(terminatePredicate)
+        .setTerminateCondition(new DefaultTerminateCondition<>())
         .setParentSelectFunction(new RouletteWheelParentSelectFunction<>())
         .setCrossoverFunction(new RandomCrossoverFunction<>(fitnessFunction))
         .setMutationFunction(new RandomMutationFunction<>(geneGenerator))
@@ -56,7 +55,4 @@ public class DiophantineEquationSolver {
   };
 
   private GeneGenerator<Integer> geneGenerator = () -> new Gene<>(1 + RANDOM.nextInt(result));
-
-  private Predicate<Population<Integer>> terminatePredicate = population -> population.getIndividuals().stream()
-      .anyMatch(individual -> individual.getFitness() == 1.0);
 }

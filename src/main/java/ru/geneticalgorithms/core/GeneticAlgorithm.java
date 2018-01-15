@@ -1,10 +1,11 @@
 package ru.geneticalgorithms.core;
 
-import ru.geneticalgorithms.core.function.crossover.CrossoverFunction;
 import ru.geneticalgorithms.core.function.FitnessFunction;
 import ru.geneticalgorithms.core.function.GeneGenerator;
+import ru.geneticalgorithms.core.function.crossover.CrossoverFunction;
 import ru.geneticalgorithms.core.function.mutation.MutationFunction;
 import ru.geneticalgorithms.core.function.parentselect.ParentSelectFunction;
+import ru.geneticalgorithms.core.function.terminatecondition.TerminateCondition;
 import ru.geneticalgorithms.core.model.Gene;
 import ru.geneticalgorithms.core.model.Individual;
 import ru.geneticalgorithms.core.model.Population;
@@ -12,7 +13,6 @@ import ru.geneticalgorithms.core.model.Population;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Predicate;
 
 /**
  * @author avnik
@@ -27,14 +27,14 @@ public class GeneticAlgorithm<T> {
 
   private final FitnessFunction<T> fitnessFunction;
   private final GeneGenerator<T> geneGenerator;
-  private final Predicate<Population<T>> terminatePredicate;
+  private final TerminateCondition<T> terminateCondition;
   private final ParentSelectFunction<T> parentSelectFunction;
   private final CrossoverFunction<T> crossoverFunction;
   private final MutationFunction<T> mutationFunction;
 
   private GeneticAlgorithm(int chromosomeLength, int populationSize, double mutationRate, double crossoverRate,
                            int elitismCount, int maxGenerationsCount, FitnessFunction<T> fitnessFunction,
-                           GeneGenerator<T> geneGenerator, Predicate<Population<T>> terminatePredicate,
+                           GeneGenerator<T> geneGenerator, TerminateCondition<T> terminateCondition,
                            ParentSelectFunction<T> parentSelectFunction, CrossoverFunction<T> crossoverFunction,
                            MutationFunction<T> mutationFunction) {
     this.populationSize = populationSize;
@@ -46,7 +46,7 @@ public class GeneticAlgorithm<T> {
 
     this.fitnessFunction = Objects.requireNonNull(fitnessFunction);
     this.geneGenerator = Objects.requireNonNull(geneGenerator);
-    this.terminatePredicate = Objects.requireNonNull(terminatePredicate);
+    this.terminateCondition = Objects.requireNonNull(terminateCondition);
     this.parentSelectFunction = Objects.requireNonNull(parentSelectFunction);
     this.crossoverFunction = Objects.requireNonNull(crossoverFunction);
     this.mutationFunction = Objects.requireNonNull(mutationFunction);
@@ -56,7 +56,7 @@ public class GeneticAlgorithm<T> {
     Population<T> population = new Population<>(populationSize, chromosomeLength, fitnessFunction, geneGenerator);
 
     int generation = 1;
-    while (generation < maxGenerationsCount && !terminatePredicate.test(population)) {
+    while (generation < maxGenerationsCount && !terminateCondition.isMet(population)) {
       System.out.println("Best solution: " + population.getFittest(0));
 
       population = crossoverPopulation(population);
@@ -127,7 +127,7 @@ public class GeneticAlgorithm<T> {
 
     private FitnessFunction fitnessFunction;
     private GeneGenerator geneGenerator;
-    private Predicate terminatePredicate;
+    private TerminateCondition terminateCondition;
     private ParentSelectFunction parentSelectFunction;
     private CrossoverFunction crossoverFunction;
     private MutationFunction mutationFunction;
@@ -143,7 +143,7 @@ public class GeneticAlgorithm<T> {
           maxGenerationsCount,
           fitnessFunction,
           geneGenerator,
-          terminatePredicate,
+          terminateCondition,
           parentSelectFunction,
           crossoverFunction,
           mutationFunction
@@ -190,8 +190,8 @@ public class GeneticAlgorithm<T> {
       return this;
     }
 
-    public <T> Builder setTerminatePredicate(Predicate<Population<T>> terminatePredicate) {
-      this.terminatePredicate = terminatePredicate;
+    public <T> Builder setTerminateCondition(TerminateCondition<T> terminateCondition) {
+      this.terminateCondition = terminateCondition;
       return this;
     }
 
