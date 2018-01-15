@@ -1,17 +1,14 @@
 package ru.geneticalgorithms.allones;
 
 import ru.geneticalgorithms.core.GeneticAlgorithm;
-import ru.geneticalgorithms.core.function.CrossoverFunction;
 import ru.geneticalgorithms.core.function.FitnessFunction;
 import ru.geneticalgorithms.core.function.GeneGenerator;
 import ru.geneticalgorithms.core.function.MutationFunction;
+import ru.geneticalgorithms.core.function.crossover.RandomCrossoverFunction;
 import ru.geneticalgorithms.core.function.parentselect.RouletteWheelParentSelectFunction;
 import ru.geneticalgorithms.core.model.Gene;
-import ru.geneticalgorithms.core.model.Individual;
 import ru.geneticalgorithms.core.model.Population;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Predicate;
 
 /**
@@ -32,7 +29,7 @@ public class AllOnesSolver {
         .setGeneGenerator(geneGenerator)
         .setTerminatePredicate(terminatePredicate)
         .setParentSelectFunction(new RouletteWheelParentSelectFunction<>())
-        .setCrossoverFunction(crossoverFunction)
+        .setCrossoverFunction(new RandomCrossoverFunction<>(fitnessFunction))
         .setMutationFunction(mutationFunction)
         .build();
   }
@@ -50,19 +47,6 @@ public class AllOnesSolver {
 
   private Predicate<Population<Integer>> terminatePredicate = population -> population.getIndividuals().stream()
       .anyMatch(individual -> individual.getFitness() == 1.0);
-
-  private CrossoverFunction<Integer> crossoverFunction = (parent1, parent2) -> {
-    List<Gene<Integer>> parent1Chromosome = parent1.getChromosome();
-    List<Gene<Integer>> parent2Chromosome = parent2.getChromosome();
-    List<Gene<Integer>> newGenes = new ArrayList<>(parent1Chromosome.size());
-
-    for (int geneIndex = 0; geneIndex < parent1Chromosome.size(); geneIndex++) {
-      Gene<Integer> gene = Math.random() < 0.5 ? parent1Chromosome.get(geneIndex) : parent2Chromosome.get(geneIndex);
-      newGenes.add(gene);
-    }
-
-    return new Individual<>(newGenes, fitnessFunction);
-  };
 
   private MutationFunction<Integer> mutationFunction = gene -> {
     Integer newValue = gene.getValue() == 1 ? 0 : 1;

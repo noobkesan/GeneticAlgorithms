@@ -1,6 +1,6 @@
 package ru.geneticalgorithms.core;
 
-import ru.geneticalgorithms.core.function.CrossoverFunction;
+import ru.geneticalgorithms.core.function.crossover.CrossoverFunction;
 import ru.geneticalgorithms.core.function.FitnessFunction;
 import ru.geneticalgorithms.core.function.GeneGenerator;
 import ru.geneticalgorithms.core.function.MutationFunction;
@@ -52,7 +52,7 @@ public class GeneticAlgorithm<T> {
     this.mutationFunction = Objects.requireNonNull(mutationFunction);
   }
 
-  public void run() {
+  public Individual<T> run() {
     Population<T> population = new Population<>(populationSize, chromosomeLength, fitnessFunction, geneGenerator);
 
     int generation = 1;
@@ -66,6 +66,7 @@ public class GeneticAlgorithm<T> {
 
     System.out.println("Found solution in " + generation + " generations");
     System.out.println("Best solution: " + population.getFittest(0));
+    return population.getFittest(0);
   }
 
   private Population<T> crossoverPopulation(Population<T> population) {
