@@ -54,5 +54,5 @@ public class DiophantineEquationSolver {
     return 1 / Math.exp(difference);
   };
 
-  private GeneGenerator<Integer> geneGenerator = () -> new Gene<>(1 + RANDOM.nextInt(result));
+  private GeneGenerator<Integer> geneGenerator = previousGenes -> new Gene<>(1 + RANDOM.nextInt(result));
 }

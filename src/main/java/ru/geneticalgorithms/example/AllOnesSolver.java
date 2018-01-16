@@ -41,5 +41,5 @@ public class AllOnesSolver {
       .filter(value -> value == 1)
       .sum() / (double) chromosome.size();
 
-  private GeneGenerator<Integer> geneGenerator = () -> Math.random() < 0.5 ? new Gene<>(0) : new Gene<>(1);
+  private GeneGenerator<Integer> geneGenerator = previousGenes -> Math.random() < 0.5 ? new Gene<>(0) : new Gene<>(1);
 }

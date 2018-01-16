@@ -28,7 +28,8 @@ public class Individual<T> {
                                                   GeneGenerator<T> geneGenerator) {
     List<Gene<T>> chromosome = new ArrayList<>(chromosomeLength);
     for (int i = 0; i < chromosomeLength; i++) {
-      chromosome.add(geneGenerator.generateGene());
+      Gene<T> newGene = geneGenerator.generateGene(Collections.unmodifiableList(chromosome));
+      chromosome.add(newGene);
     }
 
     return new Individual<>(chromosome, fitnessFunction);
