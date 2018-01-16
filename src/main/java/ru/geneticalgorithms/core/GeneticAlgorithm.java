@@ -1,5 +1,7 @@
 package ru.geneticalgorithms.core;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.geneticalgorithms.core.function.FitnessFunction;
 import ru.geneticalgorithms.core.function.GeneGenerator;
 import ru.geneticalgorithms.core.function.crossover.CrossoverFunction;
@@ -18,6 +20,8 @@ import java.util.Objects;
  * @author avnik
  */
 public class GeneticAlgorithm<T> {
+  private static final Logger logger = LoggerFactory.getLogger(GeneticAlgorithm.class);
+
   private final int chromosomeLength;
   private final int populationSize;
   private final double mutationRate;
@@ -50,22 +54,29 @@ public class GeneticAlgorithm<T> {
     this.parentSelectFunction = Objects.requireNonNull(parentSelectFunction);
     this.crossoverFunction = Objects.requireNonNull(crossoverFunction);
     this.mutationFunction = Objects.requireNonNull(mutationFunction);
+
+    logger.info(
+        "Created with following params: populationSize={}, chromosomeLength={}, mutationRate={}, " +
+            "crossoverRate={}, elitismCount={}, maxGenerationsCount={}",
+        populationSize, chromosomeLength, mutationRate, crossoverRate, elitismCount, maxGenerationsCount
+    );
   }
 
   public Individual<T> run() {
+    logger.info("Genetic algorithm started");
     Population<T> population = new Population<>(populationSize, chromosomeLength, fitnessFunction, geneGenerator);
 
     int generation = 1;
     while (generation < maxGenerationsCount && !terminateCondition.isMet(population)) {
-      System.out.println("Best solution: " + population.getFittest(0));
+      logger.info("Generation-{} Best solution: {}", generation, population.getFittest(0));
 
       population = crossoverPopulation(population);
       population = mutatePopulation(population);
       generation++;
     }
 
-    System.out.println("Found solution in " + generation + " generations");
-    System.out.println("Best solution: " + population.getFittest(0));
+    logger.info("Found solution in {} generations", generation);
+    logger.info("Final solution: {}", population.getFittest(0));
     return population.getFittest(0);
   }
 
