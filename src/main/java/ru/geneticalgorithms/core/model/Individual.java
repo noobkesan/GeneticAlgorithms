@@ -46,6 +46,6 @@ public class Individual<T> {
     return chromosome.stream()
         .map(Gene::getValue)
         .map(Object::toString)
-        .collect(Collectors.joining());
+        .collect(Collectors.joining(" "));
   }
 }
