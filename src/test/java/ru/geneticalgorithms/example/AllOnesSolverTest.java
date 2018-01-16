@@ -1,6 +1,7 @@
-package ru.geneticalgorithms.allones;
+package ru.geneticalgorithms.example;
 
 import org.junit.Test;
+import ru.geneticalgorithms.example.AllOnesSolver;
 
 /**
  * @author avnik

@@ -1,4 +1,4 @@
-package ru.geneticalgorithms.allones;
+package ru.geneticalgorithms.example;
 
 import ru.geneticalgorithms.core.GeneticAlgorithm;
 import ru.geneticalgorithms.core.function.FitnessFunction;

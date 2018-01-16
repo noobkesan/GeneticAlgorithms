@@ -1,4 +1,4 @@
-package ru.geneticalgorithms.diophantine;
+package ru.geneticalgorithms.example;
 
 import org.junit.Test;
 import ru.geneticalgorithms.core.model.Individual;
