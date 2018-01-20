@@ -110,16 +110,13 @@ public class GeneticAlgorithm<T> {
 
     for (int i = elitismCount; i < individuals.size(); i++) {
       Individual<T> individual = population.getFittest(i);
-      List<Gene<T>> chromosome = individual.getChromosome();
-      List<Gene<T>> newChromosome = new ArrayList<>(chromosome.size());
+      List<Gene<T>> newChromosome = individual.getChromosome();
 
-      for (Gene<T> gene : chromosome) {
-        Gene<T> newGene = gene;
-        if(mutationRate > Math.random()) {
-          newGene = mutationFunction.applyMutation(gene);
+      for (int j = 0; j < chromosomeLength; j++) {
+        Gene<T> gene = newChromosome.get(j);
+        if (mutationRate > Math.random()) {
+          newChromosome = mutationFunction.applyMutation(gene, j, newChromosome);
         }
-
-        newChromosome.add(newGene);
       }
 
       Individual<T> newIndividual = new Individual<>(newChromosome);

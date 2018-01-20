@@ -3,7 +3,8 @@ package ru.geneticalgorithms.core.function.mutation;
 import ru.geneticalgorithms.core.function.GeneGenerator;
 import ru.geneticalgorithms.core.model.Gene;
 
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -17,16 +18,19 @@ public class RandomMutationFunction<T> implements MutationFunction<T> {
   }
 
   @Override
-  public Gene<T> applyMutation(Gene<T> gene) {
-    Gene<T> newGene = nextGene();
+  public List<Gene<T>> applyMutation(Gene<T> gene, int geneIndex, List<Gene<T>> chromosome) {
+    Gene<T> newGene = nextGene(chromosome);
     while (newGene.getValue().equals(gene.getValue())) {
-      newGene = nextGene();
+      newGene = nextGene(chromosome);
     }
 
-    return newGene;
+    List<Gene<T>> newChromosome = new ArrayList<>(chromosome);
+    newChromosome.set(geneIndex, newGene);
+
+    return newChromosome;
   }
 
-  private Gene<T> nextGene() {
-    return geneGenerator.generateGene(Collections.emptyList());
+  private Gene<T> nextGene(List<Gene<T>> chromosome) {
+    return geneGenerator.generateGene(chromosome);
   }
 }
