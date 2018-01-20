@@ -1,6 +1,5 @@
 package ru.geneticalgorithms.core.function.crossover;
 
-import ru.geneticalgorithms.core.function.FitnessFunction;
 import ru.geneticalgorithms.core.model.Gene;
 import ru.geneticalgorithms.core.model.Individual;
 
@@ -11,11 +10,6 @@ import java.util.List;
  * @author avnik
  */
 public class RandomCrossoverFunction<T> implements CrossoverFunction<T> {
-  private FitnessFunction<T> fitnessFunction;
-
-  public RandomCrossoverFunction(FitnessFunction<T> fitnessFunction) {
-    this.fitnessFunction = fitnessFunction;
-  }
 
   @Override
   public Individual<T> applyCrossover(Individual<T> parent1, Individual<T> parent2) {
@@ -28,6 +22,6 @@ public class RandomCrossoverFunction<T> implements CrossoverFunction<T> {
       newGenes.add(gene);
     }
 
-    return new Individual<>(newGenes, fitnessFunction);
+    return new Individual<>(newGenes);
   }
 }

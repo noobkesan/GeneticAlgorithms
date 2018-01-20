@@ -35,7 +35,7 @@ public class DiophantineEquationSolver {
         .setGeneGenerator(geneGenerator)
         .setTerminateCondition(new DefaultTerminateCondition<>())
         .setParentSelectFunction(new RouletteWheelParentSelectFunction<>())
-        .setCrossoverFunction(new RandomCrossoverFunction<>(fitnessFunction))
+        .setCrossoverFunction(new RandomCrossoverFunction<>())
         .setMutationFunction(new RandomMutationFunction<>(geneGenerator))
         .build();
   }

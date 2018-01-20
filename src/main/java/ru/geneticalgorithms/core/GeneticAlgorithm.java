@@ -13,8 +13,11 @@ import ru.geneticalgorithms.core.model.Individual;
 import ru.geneticalgorithms.core.model.Population;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author avnik
@@ -64,7 +67,7 @@ public class GeneticAlgorithm<T> {
 
   public Individual<T> run() {
     logger.info("Genetic algorithm started");
-    Population<T> population = new Population<>(populationSize, chromosomeLength, fitnessFunction, geneGenerator);
+    Population<T> population = newRandomPopulation();
 
     int generation = 1;
     while (generation < maxGenerationsCount && !terminateCondition.isMet(population)) {
@@ -90,6 +93,7 @@ public class GeneticAlgorithm<T> {
       if (this.crossoverRate > Math.random()) {
         Individual<T> parent2 = parentSelectFunction.selectParent(population);
         Individual<T> offspring = crossoverFunction.applyCrossover(parent1, parent2);
+        offspring.calcFitness(fitnessFunction);
         newIndividuals.add(offspring);
 
       } else {
@@ -118,7 +122,9 @@ public class GeneticAlgorithm<T> {
         newChromosome.add(newGene);
       }
 
-      newIndividuals.add(new Individual<>(newChromosome, fitnessFunction));
+      Individual<T> newIndividual = new Individual<>(newChromosome);
+      newIndividual.calcFitness(fitnessFunction);
+      newIndividuals.add(newIndividual);
     }
 
     return new Population<>(newIndividuals);
@@ -126,6 +132,27 @@ public class GeneticAlgorithm<T> {
 
   private List<Individual<T>> newEliteIndividuals(List<Individual<T>> individuals) {
     return new ArrayList<>(individuals.subList(0, elitismCount));
+  }
+
+  @SuppressWarnings("unchecked")
+  private Individual<T> newRandomIndividual() {
+    List<Gene<T>> chromosome = new ArrayList<>(chromosomeLength);
+    for (int i = 0; i < chromosomeLength; i++) {
+      Gene<T> newGene = geneGenerator.generateGene(Collections.unmodifiableList(chromosome));
+      chromosome.add(newGene);
+    }
+
+    Individual<T> newIndividual = new Individual<>(chromosome);
+    newIndividual.calcFitness(fitnessFunction);
+    return newIndividual;
+  }
+
+  private Population<T> newRandomPopulation() {
+    List<Individual<T>> individuals = Stream.generate(this::newRandomIndividual)
+        .limit(populationSize)
+        .collect(Collectors.toList());
+
+    return new Population<>(individuals);
   }
 
   public static class Builder {
