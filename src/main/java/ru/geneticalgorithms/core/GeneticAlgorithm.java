@@ -12,10 +12,7 @@ import ru.geneticalgorithms.core.model.Gene;
 import ru.geneticalgorithms.core.model.Individual;
 import ru.geneticalgorithms.core.model.Population;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -33,6 +30,7 @@ public class GeneticAlgorithm<T> {
   private final int maxGenerationsCount;
 
   private final FitnessFunction<T> fitnessFunction;
+  private final Comparator<Individual> individualComparator;
   private final GeneGenerator<T> geneGenerator;
   private final TerminateCondition<T> terminateCondition;
   private final ParentSelectFunction<T> parentSelectFunction;
@@ -41,9 +39,9 @@ public class GeneticAlgorithm<T> {
 
   private GeneticAlgorithm(int chromosomeLength, int populationSize, double mutationRate, double crossoverRate,
                            int elitismCount, int maxGenerationsCount, FitnessFunction<T> fitnessFunction,
-                           GeneGenerator<T> geneGenerator, TerminateCondition<T> terminateCondition,
-                           ParentSelectFunction<T> parentSelectFunction, CrossoverFunction<T> crossoverFunction,
-                           MutationFunction<T> mutationFunction) {
+                           Comparator<Individual> individualComparator, GeneGenerator<T> geneGenerator,
+                           TerminateCondition<T> terminateCondition, ParentSelectFunction<T> parentSelectFunction,
+                           CrossoverFunction<T> crossoverFunction, MutationFunction<T> mutationFunction) {
     this.populationSize = populationSize;
     this.chromosomeLength = chromosomeLength;
     this.mutationRate = mutationRate;
@@ -52,6 +50,7 @@ public class GeneticAlgorithm<T> {
     this.maxGenerationsCount = maxGenerationsCount;
 
     this.fitnessFunction = Objects.requireNonNull(fitnessFunction);
+    this.individualComparator = Objects.requireNonNull(individualComparator);
     this.geneGenerator = Objects.requireNonNull(geneGenerator);
     this.terminateCondition = Objects.requireNonNull(terminateCondition);
     this.parentSelectFunction = Objects.requireNonNull(parentSelectFunction);
@@ -101,7 +100,7 @@ public class GeneticAlgorithm<T> {
       }
     }
 
-    return new Population<>(newIndividuals);
+    return new Population<>(newIndividuals, individualComparator);
   }
 
   private Population<T> mutatePopulation(Population<T> population) {
@@ -124,7 +123,7 @@ public class GeneticAlgorithm<T> {
       newIndividuals.add(newIndividual);
     }
 
-    return new Population<>(newIndividuals);
+    return new Population<>(newIndividuals, individualComparator);
   }
 
   private List<Individual<T>> newEliteIndividuals(List<Individual<T>> individuals) {
@@ -149,7 +148,7 @@ public class GeneticAlgorithm<T> {
         .limit(populationSize)
         .collect(Collectors.toList());
 
-    return new Population<>(individuals);
+    return new Population<>(individuals, individualComparator);
   }
 
   public static class Builder {
@@ -161,6 +160,7 @@ public class GeneticAlgorithm<T> {
     private int maxGenerationsCount = 1000;
 
     private FitnessFunction fitnessFunction;
+    private Comparator<Individual> individualComparator;
     private GeneGenerator geneGenerator;
     private TerminateCondition terminateCondition;
     private ParentSelectFunction parentSelectFunction;
@@ -177,6 +177,7 @@ public class GeneticAlgorithm<T> {
           elitismCount,
           maxGenerationsCount,
           fitnessFunction,
+          individualComparator,
           geneGenerator,
           terminateCondition,
           parentSelectFunction,
@@ -217,6 +218,11 @@ public class GeneticAlgorithm<T> {
 
     public <T> Builder setFitnessFunction(FitnessFunction<T> fitnessFunction) {
       this.fitnessFunction = fitnessFunction;
+      return this;
+    }
+
+    public Builder setIndividualComparator(Comparator<Individual> individualComparator) {
+      this.individualComparator = individualComparator;
       return this;
     }
 
