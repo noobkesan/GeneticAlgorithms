@@ -37,25 +37,22 @@ public class GeneticAlgorithm<T> {
   private final CrossoverFunction<T> crossoverFunction;
   private final MutationFunction<T> mutationFunction;
 
-  private GeneticAlgorithm(int chromosomeLength, int populationSize, double mutationRate, double crossoverRate,
-                           int elitismCount, int maxGenerationsCount, FitnessFunction<T> fitnessFunction,
-                           Comparator<Individual> individualComparator, GeneGenerator<T> geneGenerator,
-                           TerminateCondition<T> terminateCondition, ParentSelectFunction<T> parentSelectFunction,
-                           CrossoverFunction<T> crossoverFunction, MutationFunction<T> mutationFunction) {
-    this.populationSize = populationSize;
-    this.chromosomeLength = chromosomeLength;
-    this.mutationRate = mutationRate;
-    this.crossoverRate = crossoverRate;
-    this.elitismCount = elitismCount;
-    this.maxGenerationsCount = maxGenerationsCount;
+  @SuppressWarnings("unchecked")
+  private GeneticAlgorithm(Builder builder) {
+    this.populationSize = builder.populationSize;
+    this.chromosomeLength = builder.chromosomeLength;
+    this.mutationRate = builder.mutationRate;
+    this.crossoverRate = builder.crossoverRate;
+    this.elitismCount = builder.elitismCount;
+    this.maxGenerationsCount = builder.maxGenerationsCount;
 
-    this.fitnessFunction = Objects.requireNonNull(fitnessFunction);
-    this.individualComparator = Objects.requireNonNull(individualComparator);
-    this.geneGenerator = Objects.requireNonNull(geneGenerator);
-    this.terminateCondition = Objects.requireNonNull(terminateCondition);
-    this.parentSelectFunction = Objects.requireNonNull(parentSelectFunction);
-    this.crossoverFunction = Objects.requireNonNull(crossoverFunction);
-    this.mutationFunction = Objects.requireNonNull(mutationFunction);
+    this.fitnessFunction = Objects.requireNonNull(builder.fitnessFunction);
+    this.individualComparator = Objects.requireNonNull(builder.individualComparator);
+    this.geneGenerator = Objects.requireNonNull(builder.geneGenerator);
+    this.terminateCondition = Objects.requireNonNull(builder.terminateCondition);
+    this.parentSelectFunction = Objects.requireNonNull(builder.parentSelectFunction);
+    this.crossoverFunction = Objects.requireNonNull(builder.crossoverFunction);
+    this.mutationFunction = Objects.requireNonNull(builder.mutationFunction);
 
     logger.info(
         "Created with following params: populationSize={}, chromosomeLength={}, mutationRate={}, " +
@@ -167,23 +164,8 @@ public class GeneticAlgorithm<T> {
     private CrossoverFunction crossoverFunction;
     private MutationFunction mutationFunction;
 
-    @SuppressWarnings("unchecked")
     public <T> GeneticAlgorithm<T> build() {
-      return new GeneticAlgorithm<>(
-          chromosomeLength,
-          populationSize,
-          mutationRate,
-          crossoverRate,
-          elitismCount,
-          maxGenerationsCount,
-          fitnessFunction,
-          individualComparator,
-          geneGenerator,
-          terminateCondition,
-          parentSelectFunction,
-          crossoverFunction,
-          mutationFunction
-      );
+      return new GeneticAlgorithm<>(this);
     }
 
     public Builder setPopulationSize(int populationSize) {
