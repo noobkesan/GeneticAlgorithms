@@ -1,9 +1,10 @@
 package ru.geneticalgorithms.core.model;
 
+import ru.geneticalgorithms.core.exception.GeneticAlgorithmException;
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @author avnik
@@ -16,8 +17,8 @@ public class Population<T> {
   private final List<Individual<T>> individuals;
   private final double populationFitness;
 
-  public Population(List<Individual<T>> individuals, Comparator<Individual> individualComparator) {
-    Objects.requireNonNull(individuals);
+  public Population(List<Individual<T>> individuals, Comparator<Individual> individualComparator) throws GeneticAlgorithmException {
+    validateIndividuals(individuals);
     individuals.sort(individualComparator != null ? individualComparator : DEFAULT_COMPARATOR);
 
     this.individuals = Collections.unmodifiableList(individuals);
@@ -38,6 +39,12 @@ public class Population<T> {
 
   private double calcPopulationFitness() {
     return individuals.stream().mapToDouble(Individual::getFitness).sum();
+  }
+
+  private void validateIndividuals(List<Individual<T>> individuals) throws GeneticAlgorithmException {
+    if(individuals == null || individuals.isEmpty()) {
+      throw new GeneticAlgorithmException("Population individuals mustn't be null or empty");
+    }
   }
 
   @Override
