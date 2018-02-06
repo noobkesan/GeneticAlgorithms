@@ -67,7 +67,7 @@ public class GeneticAlgorithm<T> {
 
     int generation = 1;
     while (generation < maxGenerationsCount && !terminateCondition.isMet(population)) {
-      logger.info("Generation-{} Best solution: {}", generation, population.getFittest(0));
+      logger.info("Generation-{} Best solution: {}", generation, population.getFittest());
 
       population = crossoverPopulation(population);
       population = mutatePopulation(population);
@@ -75,16 +75,16 @@ public class GeneticAlgorithm<T> {
     }
 
     logger.info("Found solution in {} generations", generation);
-    logger.info("Final solution: {}", population.getFittest(0));
-    return population.getFittest(0);
+    logger.info("Final solution: {}", population.getFittest());
+    return population.getFittest();
   }
 
   private Population<T> crossoverPopulation(Population<T> population) {
     List<Individual<T>> individuals = population.getIndividuals();
     List<Individual<T>> newIndividuals = newEliteIndividuals(individuals);
 
-    for (int i = elitismCount; i < individuals.size(); i++) {
-      Individual<T> parent1 = population.getFittest(i);
+    for (int i = elitismCount; i < populationSize; i++) {
+      Individual<T> parent1 = individuals.get(i);
 
       if (this.crossoverRate > Math.random()) {
         Individual<T> parent2 = parentSelectFunction.selectParent(population);
@@ -104,8 +104,8 @@ public class GeneticAlgorithm<T> {
     List<Individual<T>> individuals = population.getIndividuals();
     List<Individual<T>> newIndividuals = newEliteIndividuals(individuals);
 
-    for (int i = elitismCount; i < individuals.size(); i++) {
-      Individual<T> individual = population.getFittest(i);
+    for (int i = elitismCount; i < populationSize; i++) {
+      Individual<T> individual = individuals.get(i);
       List<Gene<T>> newChromosome = individual.getChromosome();
 
       for (int j = 0; j < chromosomeLength; j++) {

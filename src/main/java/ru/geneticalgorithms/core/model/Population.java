@@ -31,8 +31,8 @@ public class Population<T> {
     return individuals;
   }
 
-  public Individual<T> getFittest(int offset) {
-    return individuals.get(offset);
+  public Individual<T> getFittest() {
+    return individuals.get(0);
   }
 
   public double getPopulationFitness() {
