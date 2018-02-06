@@ -13,15 +13,12 @@ public class Population<T> {
       (Individual i) -> i.getFitness()
   ).reversed();
 
-  private final Comparator<Individual> individualComparator;
   private final List<Individual<T>> individuals;
   private final double populationFitness;
 
   public Population(List<Individual<T>> individuals, Comparator<Individual> individualComparator) {
-    this.individualComparator = individualComparator != null ? individualComparator : DEFAULT_COMPARATOR;
-
     Objects.requireNonNull(individuals);
-    individuals.sort(individualComparator);
+    individuals.sort(individualComparator != null ? individualComparator : DEFAULT_COMPARATOR);
 
     this.individuals = Collections.unmodifiableList(individuals);
     this.populationFitness = calcPopulationFitness();
