@@ -10,6 +10,7 @@ import java.util.List;
  * @author avnik
  */
 public class Population<T> {
+  @SuppressWarnings("all")
   private static final Comparator<Individual> DEFAULT_COMPARATOR = Comparator.comparing(
       (Individual i) -> i.getFitness()
   ).reversed();
