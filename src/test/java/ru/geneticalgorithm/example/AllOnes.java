@@ -20,6 +20,7 @@ public class AllOnes {
   @Before
   public void setup() {
     this.geneticAlgorithm = new GeneticAlgorithm.Builder()
+        .parallel()
         .setFitnessFunction(fitnessFunction)
         .setGeneGenerator(geneGenerator)
         .setTerminateCondition(new DefaultTerminateCondition<>())
@@ -30,7 +31,7 @@ public class AllOnes {
   }
 
   @Test
-  public void testAllOnesSolver() {
+  public void testAllOnes() {
     geneticAlgorithm.run();
   }
 

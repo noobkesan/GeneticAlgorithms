@@ -80,7 +80,7 @@ public class GeneticAlgorithm<T> {
       logger.info("Generation-{} Best solution: {}", generation, population.getFittest());
 
       population = parallel ? parallelCrossover(population) : crossover(population);
-      population = mutatePopulation(population);
+      population = parallel ? parallelMutation(population) : mutation(population);
       generation++;
     }
 
@@ -128,31 +128,44 @@ public class GeneticAlgorithm<T> {
     return newIndividuals;
   }
 
-  private Population<T> mutatePopulation(Population<T> population) {
-    List<Individual<T>> individuals = population.getIndividuals();
-    List<Individual<T>> newIndividuals = newEliteIndividuals(individuals);
-
-    for (int i = elitismCount; i < populationSize; i++) {
-      Individual<T> individual = individuals.get(i);
-      List<Gene<T>> newChromosome = individual.getChromosome();
-
-      for (int j = 0; j < chromosomeLength; j++) {
-        Gene<T> gene = newChromosome.get(j);
-        if (mutationRate > Math.random()) {
-          newChromosome = mutationFunction.applyMutation(gene, j, newChromosome);
-        }
-      }
-
-      Individual<T> newIndividual = new Individual<>(newChromosome);
-      newIndividual.calcFitness(fitnessFunction);
-      newIndividuals.add(newIndividual);
-    }
-
+  private Population<T> mutation(Population<T> population) {
+    List<Individual<T>> newIndividuals = mutation(population.getIndividuals(), 0, populationSize);
     return new Population<>(newIndividuals, individualComparator);
   }
 
-  private List<Individual<T>> newEliteIndividuals(List<Individual<T>> individuals) {
-    return new ArrayList<>(individuals.subList(0, elitismCount));
+  private Population<T> parallelMutation(Population<T> population) {
+    Mutation mutation = new Mutation(population.getIndividuals(), 0, populationSize);
+
+    List<Individual<T>> newIndividuals = ForkJoinPool.commonPool().invoke(mutation);
+    return new Population<>(newIndividuals, individualComparator);
+  }
+
+  private List<Individual<T>> mutation(final List<Individual<T>> individuals, int startIndex, int endIndex) {
+    List<Individual<T>> newIndividuals = new ArrayList<>();
+
+    for (int i = startIndex; i < endIndex; i++) {
+      Individual<T> individual = individuals.get(i);
+      Individual<T> newIndividual = i < elitismCount ? individual : mutateIndividual(individual);
+      newIndividuals.add(newIndividual);
+    }
+
+    return newIndividuals;
+  }
+
+  private Individual<T> mutateIndividual(Individual<T> individual) {
+    List<Gene<T>> newChromosome = individual.getChromosome();
+
+    for (int j = 0; j < chromosomeLength; j++) {
+      Gene<T> gene = newChromosome.get(j);
+      if (mutationRate > Math.random()) {
+        newChromosome = mutationFunction.applyMutation(gene, j, newChromosome);
+      }
+    }
+
+    Individual<T> newIndividual = new Individual<>(newChromosome);
+    newIndividual.calcFitness(fitnessFunction);
+
+    return newIndividual;
   }
 
   @SuppressWarnings("unchecked")
@@ -204,6 +217,37 @@ public class GeneticAlgorithm<T> {
 
       List<Individual<T>> result = crossover2.compute();
       result.addAll(crossover1.join());
+
+      return result;
+    }
+  }
+
+  private class Mutation extends RecursiveTask<List<Individual<T>>> {
+    private final List<Individual<T>> individuals;
+    private final int startIndex;
+    private final int endIndex;
+
+    Mutation(final List<Individual<T>> individuals, int startIndex, int endIndex) {
+      this.individuals = individuals;
+      this.startIndex = startIndex;
+      this.endIndex = endIndex;
+    }
+
+    @Override
+    protected List<Individual<T>> compute() {
+      if(endIndex - startIndex <= SEQUENCE_PROCESSING_SIZE) {
+        return mutation(individuals, startIndex, endIndex);
+      }
+
+      int mediumIndex = (startIndex + endIndex) / 2;
+
+      Mutation mutation1 = new Mutation(individuals, startIndex, mediumIndex);
+      mutation1.fork();
+
+      Mutation mutation2 = new Mutation(individuals, mediumIndex, endIndex);
+
+      List<Individual<T>> result = mutation2.compute();
+      result.addAll(mutation1.join());
 
       return result;
     }

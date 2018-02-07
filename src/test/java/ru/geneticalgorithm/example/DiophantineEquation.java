@@ -29,6 +29,7 @@ public class DiophantineEquation {
     this.builder = new GeneticAlgorithm.Builder()
         .setElitismCount(1)
         .setMaxGenerationsCount(100)
+        .parallel()
         .setFitnessFunction(fitnessFunction)
         .setGeneGenerator(geneGenerator)
         .setTerminateCondition(new DefaultTerminateCondition<>())

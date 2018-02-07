@@ -32,6 +32,7 @@ public class Salesman {
         .setCrossoverRate(0.95)
         .setElitismCount(1)
         .setMaxGenerationsCount(100)
+        .parallel()
         .setFitnessFunction(fitnessFunction)
         .setIndividualComparator(Comparator.comparing(Individual::getFitness))
         .setGeneGenerator(geneGenerator)
