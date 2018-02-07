@@ -1,5 +1,7 @@
 package ru.geneticalgorithms.example;
 
+import org.junit.Before;
+import org.junit.Test;
 import ru.geneticalgorithms.core.GeneticAlgorithm;
 import ru.geneticalgorithms.core.exception.GeneticAlgorithmException;
 import ru.geneticalgorithms.core.function.FitnessFunction;
@@ -16,15 +18,15 @@ import java.util.stream.Collectors;
 /**
  * @author avnik
  */
-public class SalesmanSolver {
+public class Salesman {
   private static final Random RANDOM = new Random();
-  private double[][] weightMatrix;
-  private final GeneticAlgorithm<Integer> geneticAlgorithm;
 
-  public SalesmanSolver(double[][] weightMatrix) {
-    this.weightMatrix = checkWeightMatrix(weightMatrix);
-    this.geneticAlgorithm = new GeneticAlgorithm.Builder()
-        .setChromosomeLength(weightMatrix.length)
+  private GeneticAlgorithm.Builder builder;
+  private double[][] weightMatrix;
+
+  @Before
+  public void setup() {
+    this.builder = new GeneticAlgorithm.Builder()
         .setPopulationSize(50)
         .setMutationRate(0.1)
         .setCrossoverRate(0.95)
@@ -36,15 +38,43 @@ public class SalesmanSolver {
         .setTerminateCondition(population -> false)
         .setParentSelectFunction(new RouletteWheelParentSelectFunction<>())
         .setCrossoverFunction(crossoverFunction)
-        .setMutationFunction(mutationFunction)
+        .setMutationFunction(mutationFunction);
+  }
+
+  @Test
+  public void testWith3Vertices() {
+    this.weightMatrix = new double[][]{
+        {0, 10, 5, 12},
+        {10, 0, 8, 3},
+        {5, 8, 0, 4},
+        {12, 3, 4, 0},
+    };
+
+    newGeneticAlgorithm().run();
+  }
+
+  @Test
+  public void testWith6Vertices() {
+    this.weightMatrix = new double[][]{
+        {0, 1, 3, 4, 5, 6},
+        {1, 0, 2, 3, 4, 5},
+        {3, 2, 0, 3, 4, 5},
+        {4, 3, 3, 0, 4, 5},
+        {5, 4, 4, 4, 0, 5},
+        {6, 5, 5, 5, 5, 0},
+    };
+
+    newGeneticAlgorithm().run();
+  }
+
+  private GeneticAlgorithm<Integer> newGeneticAlgorithm() {
+    checkWeightMatrix(weightMatrix);
+    return this.builder
+        .setChromosomeLength(weightMatrix.length)
         .build();
   }
 
-  public Individual<Integer> run() {
-    return geneticAlgorithm.run();
-  }
-
-  private FitnessFunction<Integer> fitnessFunction = chromosome -> {
+  private final FitnessFunction<Integer> fitnessFunction = chromosome -> {
     double cost = 0;
     for (int i = 0; i < chromosome.size() - 1; i++) {
       int rowIndex = chromosome.get(i).getValue();
@@ -55,7 +85,7 @@ public class SalesmanSolver {
     return cost;
   };
 
-  private GeneGenerator<Integer> geneGenerator = previousGenes -> {
+  private final GeneGenerator<Integer> geneGenerator = previousGenes -> {
     Set<Integer> previousValuesSet = previousGenes.stream()
         .map(Gene::getValue)
         .collect(Collectors.toSet());
@@ -68,7 +98,7 @@ public class SalesmanSolver {
     return new Gene<>(newValue);
   };
 
-  private CrossoverFunction<Integer> crossoverFunction = (parent1, parent2) -> {
+  private final CrossoverFunction<Integer> crossoverFunction = (parent1, parent2) -> {
     List<Gene<Integer>> parent1Chromosome = parent1.getChromosome();
     List<Gene<Integer>> parent2Chromosome = parent2.getChromosome();
     List<Gene<Integer>> newGenes = new ArrayList<>(parent1Chromosome.size());
@@ -92,7 +122,7 @@ public class SalesmanSolver {
     return new Individual<>(newGenes);
   };
 
-  private MutationFunction<Integer> mutationFunction = (gene, geneIndex, chromosome) -> {
+  private final MutationFunction<Integer> mutationFunction = (gene, geneIndex, chromosome) -> {
     Gene<Integer> newGene = geneGenerator.generateGene(Collections.emptyList());
     while (newGene.getValue().equals(gene.getValue())) {
       newGene = geneGenerator.generateGene(Collections.emptyList());
@@ -113,7 +143,7 @@ public class SalesmanSolver {
     return newChromosome;
   };
 
-  private double[][] checkWeightMatrix(double[][] weightMatrix) throws GeneticAlgorithmException {
+  private void checkWeightMatrix(double[][] weightMatrix) throws GeneticAlgorithmException {
     if(weightMatrix == null || weightMatrix.length == 0) {
       throw new GeneticAlgorithmException("Weight matrix must exist!");
     }
@@ -132,7 +162,5 @@ public class SalesmanSolver {
         throw new GeneticAlgorithmException("Weight must be > 0!");
       }
     }
-
-    return weightMatrix;
   }
 }
