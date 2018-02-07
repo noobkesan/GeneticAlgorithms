@@ -1,7 +1,6 @@
 package ru.geneticalgorithms.core.function.parentselect;
 
 import ru.geneticalgorithms.core.model.Individual;
-import ru.geneticalgorithms.core.model.Population;
 
 import java.util.List;
 
@@ -10,11 +9,8 @@ import java.util.List;
  */
 public class RouletteWheelParentSelectFunction<T> implements ParentSelectFunction<T> {
   @Override
-  public Individual<T> selectParent(Population<T> population) {
-    List<Individual<T>> individuals = population.getIndividuals();
-
+  public Individual<T> selectParent(List<Individual<T>> individuals, double populationFitness) {
     // Spin roulette wheel
-    double populationFitness = population.getPopulationFitness();
     double rouletteWheelPosition = Math.random() * populationFitness;
 
     // Find parent

@@ -13,6 +13,8 @@ import ru.geneticalgorithms.core.model.Individual;
 import ru.geneticalgorithms.core.model.Population;
 
 import java.util.*;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.RecursiveTask;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -21,6 +23,7 @@ import java.util.stream.Stream;
  */
 public class GeneticAlgorithm<T> {
   private static final Logger logger = LoggerFactory.getLogger(GeneticAlgorithm.class);
+  private static final int SEQUENCE_PROCESSING_SIZE = 10;
 
   private final int chromosomeLength;
   private final int populationSize;
@@ -71,7 +74,7 @@ public class GeneticAlgorithm<T> {
     while (generation < maxGenerationsCount && !terminateCondition.isMet(population)) {
       logger.info("Generation-{} Best solution: {}", generation, population.getFittest());
 
-      population = crossoverPopulation(population);
+      population = parallel ? parallelCrossover(population) : crossover(population);
       population = mutatePopulation(population);
       generation++;
     }
@@ -81,15 +84,33 @@ public class GeneticAlgorithm<T> {
     return population.getFittest();
   }
 
-  private Population<T> crossoverPopulation(Population<T> population) {
-    List<Individual<T>> individuals = population.getIndividuals();
-    List<Individual<T>> newIndividuals = newEliteIndividuals(individuals);
+  private Population<T> crossover(Population<T> population) {
+    List<Individual<T>> newIndividuals = crossover(
+        population.getIndividuals(),
+        population.getPopulationFitness(),
+        0,
+        populationSize
+    );
 
-    for (int i = elitismCount; i < populationSize; i++) {
+    return new Population<>(newIndividuals, individualComparator);
+  }
+
+  private Population<T> parallelCrossover(Population<T> population) {
+    Crossover crossover = new Crossover(population.getIndividuals(), population.getPopulationFitness(), 0, populationSize);
+
+    List<Individual<T>> newIndividuals = ForkJoinPool.commonPool().invoke(crossover);
+    return new Population<>(newIndividuals, individualComparator);
+  }
+
+  private List<Individual<T>> crossover(final List<Individual<T>> individuals, double populationFitness,
+                                        int startIndex, int endIndex) {
+    List<Individual<T>> newIndividuals = new ArrayList<>();
+
+    for (int i = startIndex; i < endIndex; i++) {
       Individual<T> parent1 = individuals.get(i);
 
-      if (this.crossoverRate > Math.random()) {
-        Individual<T> parent2 = parentSelectFunction.selectParent(population);
+      if (i >= elitismCount && crossoverRate > Math.random()) {
+        Individual<T> parent2 = parentSelectFunction.selectParent(individuals, populationFitness);
         Individual<T> offspring = crossoverFunction.applyCrossover(parent1, parent2);
         offspring.calcFitness(fitnessFunction);
         newIndividuals.add(offspring);
@@ -99,7 +120,7 @@ public class GeneticAlgorithm<T> {
       }
     }
 
-    return new Population<>(newIndividuals, individualComparator);
+    return newIndividuals;
   }
 
   private Population<T> mutatePopulation(Population<T> population) {
@@ -148,6 +169,39 @@ public class GeneticAlgorithm<T> {
         .collect(Collectors.toList());
 
     return new Population<>(individuals, individualComparator);
+  }
+
+  private class Crossover extends RecursiveTask<List<Individual<T>>> {
+    private final List<Individual<T>> individuals;
+    private final double populationFitness;
+    private final int startIndex;
+    private final int endIndex;
+
+    Crossover(final List<Individual<T>> individuals, double populationFitness, int startIndex, int endIndex) {
+      this.individuals = individuals;
+      this.populationFitness = populationFitness;
+      this.startIndex = startIndex;
+      this.endIndex = endIndex;
+    }
+
+    @Override
+    protected List<Individual<T>> compute() {
+      if(endIndex - startIndex <= SEQUENCE_PROCESSING_SIZE) {
+        return crossover(individuals, populationFitness, startIndex, endIndex);
+      }
+
+      int mediumIndex = (startIndex + endIndex) / 2;
+
+      Crossover crossover1 = new Crossover(individuals, populationFitness, startIndex, mediumIndex);
+      crossover1.fork();
+
+      Crossover crossover2 = new Crossover(individuals, populationFitness, mediumIndex, endIndex);
+
+      List<Individual<T>> result = crossover2.compute();
+      result.addAll(crossover1.join());
+
+      return result;
+    }
   }
 
   public static class Builder {
