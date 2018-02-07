@@ -28,6 +28,7 @@ public class GeneticAlgorithm<T> {
   private final double crossoverRate;
   private final int elitismCount;
   private final int maxGenerationsCount;
+  private final boolean parallel;
 
   private final FitnessFunction<T> fitnessFunction;
   private final Comparator<Individual> individualComparator;
@@ -45,6 +46,7 @@ public class GeneticAlgorithm<T> {
     this.crossoverRate = builder.crossoverRate;
     this.elitismCount = builder.elitismCount;
     this.maxGenerationsCount = builder.maxGenerationsCount;
+    this.parallel = builder.parallel;
 
     this.fitnessFunction = Objects.requireNonNull(builder.fitnessFunction);
     this.individualComparator = Objects.requireNonNull(builder.individualComparator);
@@ -155,6 +157,7 @@ public class GeneticAlgorithm<T> {
     private double crossoverRate = 0.95;
     private int elitismCount = 5;
     private int maxGenerationsCount = 1000;
+    private boolean parallel = false;
 
     private FitnessFunction fitnessFunction;
     private Comparator<Individual> individualComparator;
@@ -195,6 +198,11 @@ public class GeneticAlgorithm<T> {
 
     public Builder setMaxGenerationsCount(int maxGenerationsCount) {
       this.maxGenerationsCount = maxGenerationsCount;
+      return this;
+    }
+
+    public Builder setParallel(boolean parallel) {
+      this.parallel = parallel;
       return this;
     }
 
