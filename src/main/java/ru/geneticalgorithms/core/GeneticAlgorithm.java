@@ -255,8 +255,8 @@ public class GeneticAlgorithm<T> {
       return this;
     }
 
-    public Builder setParallel(boolean parallel) {
-      this.parallel = parallel;
+    public Builder parallel() {
+      this.parallel = true;
       return this;
     }
 
