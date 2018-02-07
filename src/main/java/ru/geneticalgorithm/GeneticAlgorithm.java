@@ -97,14 +97,14 @@ public class GeneticAlgorithm<T> {
         populationSize
     );
 
-    return new Population<>(newIndividuals, individualComparator);
+    return newPopulation(newIndividuals);
   }
 
   private Population<T> parallelCrossover(Population<T> population) {
     Crossover crossover = new Crossover(population.getIndividuals(), population.getPopulationFitness(), 0, populationSize);
 
     List<Individual<T>> newIndividuals = ForkJoinPool.commonPool().invoke(crossover);
-    return new Population<>(newIndividuals, individualComparator);
+    return newPopulation(newIndividuals);
   }
 
   private List<Individual<T>> crossover(final List<Individual<T>> individuals, double populationFitness,
@@ -130,14 +130,14 @@ public class GeneticAlgorithm<T> {
 
   private Population<T> mutation(Population<T> population) {
     List<Individual<T>> newIndividuals = mutation(population.getIndividuals(), 0, populationSize);
-    return new Population<>(newIndividuals, individualComparator);
+    return newPopulation(newIndividuals);
   }
 
   private Population<T> parallelMutation(Population<T> population) {
     Mutation mutation = new Mutation(population.getIndividuals(), 0, populationSize);
 
     List<Individual<T>> newIndividuals = ForkJoinPool.commonPool().invoke(mutation);
-    return new Population<>(newIndividuals, individualComparator);
+    return newPopulation(newIndividuals);
   }
 
   private List<Individual<T>> mutation(final List<Individual<T>> individuals, int startIndex, int endIndex) {
@@ -186,6 +186,10 @@ public class GeneticAlgorithm<T> {
         .limit(populationSize)
         .collect(Collectors.toList());
 
+    return newPopulation(individuals);
+  }
+
+  private Population<T> newPopulation(List<Individual<T>> individuals) {
     return new Population<>(individuals, individualComparator);
   }
 
