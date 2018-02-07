@@ -1,5 +1,7 @@
 package ru.geneticalgorithms.example;
 
+import org.junit.Before;
+import org.junit.Test;
 import ru.geneticalgorithms.core.GeneticAlgorithm;
 import ru.geneticalgorithms.core.function.FitnessFunction;
 import ru.geneticalgorithms.core.function.GeneGenerator;
@@ -12,17 +14,12 @@ import ru.geneticalgorithms.core.model.Gene;
 /**
  * @author avnik
  */
-public class AllOnesSolver {
+public class AllOnes {
   private GeneticAlgorithm<Integer> geneticAlgorithm;
 
-  public AllOnesSolver() {
+  @Before
+  public void setup() {
     this.geneticAlgorithm = new GeneticAlgorithm.Builder()
-        .setChromosomeLength(50)
-        .setPopulationSize(50)
-        .setMutationRate(0.1)
-        .setCrossoverRate(0.95)
-        .setElitismCount(1)
-        .setMaxGenerationsCount(1000)
         .setFitnessFunction(fitnessFunction)
         .setGeneGenerator(geneGenerator)
         .setTerminateCondition(new DefaultTerminateCondition<>())
@@ -32,14 +29,15 @@ public class AllOnesSolver {
         .build();
   }
 
-  public void run() {
+  @Test
+  public void testAllOnesSolver() {
     geneticAlgorithm.run();
   }
 
-  private FitnessFunction<Integer> fitnessFunction = chromosome -> chromosome.stream()
+  private final FitnessFunction<Integer> fitnessFunction = chromosome -> chromosome.stream()
       .mapToInt(Gene::getValue)
       .filter(value -> value == 1)
       .sum() / (double) chromosome.size();
 
-  private GeneGenerator<Integer> geneGenerator = previousGenes -> Math.random() < 0.5 ? new Gene<>(0) : new Gene<>(1);
+  private final GeneGenerator<Integer> geneGenerator = previousGenes -> Math.random() < 0.5 ? new Gene<>(0) : new Gene<>(1);
 }
