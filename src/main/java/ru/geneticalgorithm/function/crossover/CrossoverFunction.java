@@ -1,6 +1,6 @@
-package ru.geneticalgorithms.core.function.crossover;
+package ru.geneticalgorithm.function.crossover;
 
-import ru.geneticalgorithms.core.model.Individual;
+import ru.geneticalgorithm.model.Individual;
 
 /**
  * @author avnik

@@ -1,6 +1,6 @@
-package ru.geneticalgorithms.core.model;
+package ru.geneticalgorithm.model;
 
-import ru.geneticalgorithms.core.function.FitnessFunction;
+import ru.geneticalgorithm.function.FitnessFunction;
 
 import java.util.Collections;
 import java.util.List;

@@ -1,4 +1,4 @@
-package ru.geneticalgorithms.core.exception;
+package ru.geneticalgorithm.exception;
 
 /**
  * @author avnik

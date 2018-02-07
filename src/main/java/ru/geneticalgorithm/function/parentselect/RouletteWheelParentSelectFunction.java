@@ -1,6 +1,6 @@
-package ru.geneticalgorithms.core.function.parentselect;
+package ru.geneticalgorithm.function.parentselect;
 
-import ru.geneticalgorithms.core.model.Individual;
+import ru.geneticalgorithm.model.Individual;
 
 import java.util.List;
 

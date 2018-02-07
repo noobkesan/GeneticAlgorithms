@@ -1,6 +1,6 @@
-package ru.geneticalgorithms.core.function.terminatecondition;
+package ru.geneticalgorithm.function.terminatecondition;
 
-import ru.geneticalgorithms.core.model.Population;
+import ru.geneticalgorithm.model.Population;
 
 /**
  * @author avnik

@@ -1,6 +1,6 @@
-package ru.geneticalgorithms.core.function;
+package ru.geneticalgorithm.function;
 
-import ru.geneticalgorithms.core.model.Gene;
+import ru.geneticalgorithm.model.Gene;
 
 import java.util.List;
 

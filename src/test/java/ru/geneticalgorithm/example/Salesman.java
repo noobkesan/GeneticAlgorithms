@@ -1,16 +1,16 @@
-package ru.geneticalgorithms.example;
+package ru.geneticalgorithm.example;
 
 import org.junit.Before;
 import org.junit.Test;
-import ru.geneticalgorithms.core.GeneticAlgorithm;
-import ru.geneticalgorithms.core.exception.GeneticAlgorithmException;
-import ru.geneticalgorithms.core.function.FitnessFunction;
-import ru.geneticalgorithms.core.function.GeneGenerator;
-import ru.geneticalgorithms.core.function.crossover.CrossoverFunction;
-import ru.geneticalgorithms.core.function.mutation.MutationFunction;
-import ru.geneticalgorithms.core.function.parentselect.RouletteWheelParentSelectFunction;
-import ru.geneticalgorithms.core.model.Gene;
-import ru.geneticalgorithms.core.model.Individual;
+import ru.geneticalgorithm.GeneticAlgorithm;
+import ru.geneticalgorithm.exception.GeneticAlgorithmException;
+import ru.geneticalgorithm.function.FitnessFunction;
+import ru.geneticalgorithm.function.GeneGenerator;
+import ru.geneticalgorithm.function.crossover.CrossoverFunction;
+import ru.geneticalgorithm.function.mutation.MutationFunction;
+import ru.geneticalgorithm.function.parentselect.RouletteWheelParentSelectFunction;
+import ru.geneticalgorithm.model.Gene;
+import ru.geneticalgorithm.model.Individual;
 
 import java.util.*;
 import java.util.stream.Collectors;

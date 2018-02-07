@@ -1,6 +1,6 @@
-package ru.geneticalgorithms.core.model;
+package ru.geneticalgorithm.model;
 
-import ru.geneticalgorithms.core.exception.GeneticAlgorithmException;
+import ru.geneticalgorithm.exception.GeneticAlgorithmException;
 
 import java.util.Collections;
 import java.util.Comparator;

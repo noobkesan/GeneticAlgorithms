@@ -1,7 +1,7 @@
-package ru.geneticalgorithms.core.function.crossover;
+package ru.geneticalgorithm.function.crossover;
 
-import ru.geneticalgorithms.core.model.Gene;
-import ru.geneticalgorithms.core.model.Individual;
+import ru.geneticalgorithm.model.Gene;
+import ru.geneticalgorithm.model.Individual;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,16 +1,16 @@
-package ru.geneticalgorithms.core;
+package ru.geneticalgorithm;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.geneticalgorithms.core.function.FitnessFunction;
-import ru.geneticalgorithms.core.function.GeneGenerator;
-import ru.geneticalgorithms.core.function.crossover.CrossoverFunction;
-import ru.geneticalgorithms.core.function.mutation.MutationFunction;
-import ru.geneticalgorithms.core.function.parentselect.ParentSelectFunction;
-import ru.geneticalgorithms.core.function.terminatecondition.TerminateCondition;
-import ru.geneticalgorithms.core.model.Gene;
-import ru.geneticalgorithms.core.model.Individual;
-import ru.geneticalgorithms.core.model.Population;
+import ru.geneticalgorithm.function.FitnessFunction;
+import ru.geneticalgorithm.function.GeneGenerator;
+import ru.geneticalgorithm.function.crossover.CrossoverFunction;
+import ru.geneticalgorithm.function.mutation.MutationFunction;
+import ru.geneticalgorithm.function.parentselect.ParentSelectFunction;
+import ru.geneticalgorithm.function.terminatecondition.TerminateCondition;
+import ru.geneticalgorithm.model.Gene;
+import ru.geneticalgorithm.model.Individual;
+import ru.geneticalgorithm.model.Population;
 
 import java.util.*;
 import java.util.concurrent.ForkJoinPool;

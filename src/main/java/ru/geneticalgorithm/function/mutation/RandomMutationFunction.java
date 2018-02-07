@@ -1,7 +1,7 @@
-package ru.geneticalgorithms.core.function.mutation;
+package ru.geneticalgorithm.function.mutation;
 
-import ru.geneticalgorithms.core.function.GeneGenerator;
-import ru.geneticalgorithms.core.model.Gene;
+import ru.geneticalgorithm.function.GeneGenerator;
+import ru.geneticalgorithm.model.Gene;
 
 import java.util.ArrayList;
 import java.util.List;

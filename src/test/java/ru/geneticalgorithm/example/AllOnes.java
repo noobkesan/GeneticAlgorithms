@@ -1,15 +1,15 @@
-package ru.geneticalgorithms.example;
+package ru.geneticalgorithm.example;
 
 import org.junit.Before;
 import org.junit.Test;
-import ru.geneticalgorithms.core.GeneticAlgorithm;
-import ru.geneticalgorithms.core.function.FitnessFunction;
-import ru.geneticalgorithms.core.function.GeneGenerator;
-import ru.geneticalgorithms.core.function.crossover.RandomCrossoverFunction;
-import ru.geneticalgorithms.core.function.mutation.RandomMutationFunction;
-import ru.geneticalgorithms.core.function.parentselect.RouletteWheelParentSelectFunction;
-import ru.geneticalgorithms.core.function.terminatecondition.DefaultTerminateCondition;
-import ru.geneticalgorithms.core.model.Gene;
+import ru.geneticalgorithm.GeneticAlgorithm;
+import ru.geneticalgorithm.function.FitnessFunction;
+import ru.geneticalgorithm.function.GeneGenerator;
+import ru.geneticalgorithm.function.crossover.RandomCrossoverFunction;
+import ru.geneticalgorithm.function.mutation.RandomMutationFunction;
+import ru.geneticalgorithm.function.parentselect.RouletteWheelParentSelectFunction;
+import ru.geneticalgorithm.function.terminatecondition.DefaultTerminateCondition;
+import ru.geneticalgorithm.model.Gene;
 
 /**
  * @author avnik

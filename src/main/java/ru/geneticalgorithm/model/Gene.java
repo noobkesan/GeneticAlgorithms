@@ -1,4 +1,4 @@
-package ru.geneticalgorithms.core.model;
+package ru.geneticalgorithm.model;
 
 import java.util.Objects;
 
