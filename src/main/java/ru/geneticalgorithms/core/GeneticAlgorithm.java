@@ -25,6 +25,11 @@ public class GeneticAlgorithm<T> {
   private static final Logger logger = LoggerFactory.getLogger(GeneticAlgorithm.class);
   private static final int SEQUENCE_PROCESSING_SIZE = 10;
 
+  @SuppressWarnings("all")
+  private static final Comparator<Individual> DEFAULT_INDIVIDUALS_COMPARATOR = Comparator.comparing(
+      (Individual i) -> i.getFitness()
+  ).reversed();
+
   private final int chromosomeLength;
   private final int populationSize;
   private final double mutationRate;
@@ -214,7 +219,7 @@ public class GeneticAlgorithm<T> {
     private boolean parallel = false;
 
     private FitnessFunction fitnessFunction;
-    private Comparator<Individual> individualComparator;
+    private Comparator<Individual> individualComparator = DEFAULT_INDIVIDUALS_COMPARATOR;
     private GeneGenerator geneGenerator;
     private TerminateCondition terminateCondition;
     private ParentSelectFunction parentSelectFunction;

@@ -5,22 +5,20 @@ import ru.geneticalgorithms.core.exception.GeneticAlgorithmException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author avnik
  */
 public class Population<T> {
-  @SuppressWarnings("all")
-  private static final Comparator<Individual> DEFAULT_COMPARATOR = Comparator.comparing(
-      (Individual i) -> i.getFitness()
-  ).reversed();
-
   private final List<Individual<T>> individuals;
   private final double populationFitness;
 
   public Population(List<Individual<T>> individuals, Comparator<Individual> individualComparator) throws GeneticAlgorithmException {
     validateIndividuals(individuals);
-    individuals.sort(individualComparator != null ? individualComparator : DEFAULT_COMPARATOR);
+    Objects.requireNonNull(individualComparator);
+
+    individuals.sort(individualComparator);
 
     this.individuals = Collections.unmodifiableList(individuals);
     this.populationFitness = calcPopulationFitness();
